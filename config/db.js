@@ -3,14 +3,13 @@ const config = require("config");
 const db = config.get("mongoURI");
 
 //asynchronous arrow function
-//when async await, wrap in try wait
-//mongoose.connect returns a promise so await
 const connectDB = async () => {
 	//try catch block to debug?
 	try {
 		await mongoose.connect(db, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
+			useCreateIndex: true,
 		});
 		console.log("MongoDB Connected...");
 	} catch (err) {
@@ -21,4 +20,3 @@ const connectDB = async () => {
 	}
 };
 module.exports = connectDB;
-//export function
