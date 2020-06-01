@@ -24,7 +24,7 @@ if (
 				type: "pkcs8",
 				format: "pem",
 				cipher: "aes-256-cbc",
-				passphrase: "top secret",
+				passphrase: "secretPass_",
 			},
 		});
 
@@ -34,6 +34,7 @@ if (
 		);
 
 		const configjson = JSON.parse(configdefaultjson);
+		configjson["passphrase"] = "secretPass_";
 		configjson["jwt_rsa_publicKey"] = publicKey;
 		configjson["jwt_rsa_privateKey"] = privateKey;
 

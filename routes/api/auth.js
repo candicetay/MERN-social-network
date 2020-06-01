@@ -74,10 +74,23 @@ router.post(
 			//jwt token returned back is different from token from registering users
 			//but if you use the same jwt token for Get auth in api/auth,
 			//return same user because payload data is the same (userid)
-			jwt.sign(
+			/*jwt.sign(
 				payload,
 				config.get("jwtSecret"),
 				{ expiresIn: 3600 },
+				(err, token) => {
+					if (err) throw err;
+					res.json({ token });
+				}
+			);*/
+
+			jwt.sign(
+				payload,
+				{
+					key: config.get("jwt_rsa_privateKey"),
+					passphrase: config.get("passphrase"),
+				},
+				{ expiresIn: 3600, algorithm: "RS256" },
 				(err, token) => {
 					if (err) throw err;
 					res.json({ token });
