@@ -1,7 +1,64 @@
 const express = require("express");
 const connectDB = require("./config/db");
+const { generateKeyPairSync } = require("crypto");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
+
+//Check if RSA Keypair has been created, else create & save to config
+if (
+	!(
+		fs.existsSync(path.join(__dirname, "config", "id_rsa_pub.pem")) &&
+		fs.existsSync(path.join(__dirname, "config", "id_rsa_priv.pem"))
+	)
+) {
+	try {
+		const { publicKey, privateKey } = generateKeyPairSync("rsa", {
+			modulusLength: 4096,
+			publicKeyEncoding: {
+				type: "spki",
+				format: "pem",
+			},
+			privateKeyEncoding: {
+				type: "pkcs8",
+				format: "pem",
+				cipher: "aes-256-cbc",
+				passphrase: "top secret",
+			},
+		});
+
+		const configdefaultjson = fs.readFileSync(
+			path.join(__dirname, "config", "default.json"),
+			"utf-8"
+		);
+
+		const configjson = JSON.parse(configdefaultjson);
+		configjson["jwt_rsa_publicKey"] = publicKey;
+		configjson["jwt_rsa_privateKey"] = privateKey;
+
+		fs.writeFileSync(
+			path.join(__dirname, "config", "default.json"),
+			JSON.stringify(configjson),
+			"utf-8"
+		);
+
+		fs.writeFileSync(
+			path.join(__dirname, "config", "id_rsa_pub.pem"),
+			publicKey,
+			"utf8"
+		);
+		fs.writeFileSync(
+			path.join(__dirname, "config", "id_rsa_priv.pem"),
+			privateKey,
+			"utf8"
+		);
+		console.log("RSA Keypair generated");
+	} catch (err) {
+		console.log(err);
+		console.log("Issue with Saving and Generating RSA Keypair");
+	}
+}
 
 //Connect Database
 connectDB();
