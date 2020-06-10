@@ -7,6 +7,7 @@ const path = require("path");
 const app = express();
 
 //Check if RSA Keypair has been created, else create & save to config
+//Would be better to create privately and hide information such as passphrase
 if (
 	!(
 		fs.existsSync(path.join(__dirname, "config", "id_rsa_pub.pem")) &&
