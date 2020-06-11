@@ -309,7 +309,7 @@ router.patch("/experience/:exp_id", auth, async (req, res) => {
 
 			return res.json(updatedProfile);
 		} else {
-			return res.status(404).json({ msg: "Provided Wrong Experience ID" });
+			return res.status(404).json({ msg: "Experience does not exist" });
 		}
 	} catch (error) {
 		console.error(error.message);
@@ -391,7 +391,7 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
 			await profile.save();
 			res.json(profile);
 		} else {
-			return res.status(404).json({ msg: "Provided Wrong Education ID" });
+			return res.status(404).json({ msg: "Education does not exist" });
 		}
 	} catch (err) {
 		console.error(err.message);
@@ -464,7 +464,7 @@ router.patch("/education/:edu_id", auth, async (req, res) => {
 
 			return res.json(updatedProfile);
 		} else {
-			return res.status(404).json({ msg: "Provided Wrong Education ID" });
+			return res.status(404).json({ msg: "Education does not exist" });
 		}
 	} catch (error) {
 		console.error(error.message);
